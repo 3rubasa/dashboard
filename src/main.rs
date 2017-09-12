@@ -27,6 +27,17 @@ fn vue(path_param: String) -> Result<NamedFile, NotFound<String>> {
    NamedFile::open(&path).map_err(|_| NotFound(String::from("Bad path")))
 }
 
+#[get("/dashboard/<path_param>/<param2>")]
+fn paper_dashboard(path_param: String, param2: String) -> Result<NamedFile, NotFound<String>> {
+    let mut combined_path: String = "dashboard/".to_string();
+    combined_path.push_str(&path_param);
+    combined_path.push_str("/");
+    combined_path.push_str(&param2);
+   let path = Path::new(&combined_path);
+
+   NamedFile::open(&path).map_err(|_| NotFound(String::from("Bad path")))
+}
+
 #[derive(Serialize)]
 struct Serie {
     name: String,
@@ -57,4 +68,6 @@ fn main() {
     .mount("/", routes![index])
     .mount("/", routes![vue])
     .mount("/", routes![jsonsend])
+    .mount("/", routes![paper_dashboard])
+    .launch();
 }
